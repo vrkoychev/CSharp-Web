@@ -32,7 +32,9 @@
 
                 var networkStream = connection.GetStream();
 
-                WriteResponse(networkStream, "Hello from the server!");
+                var requestText = ReadRequest(networkStream);
+
+                Console.WriteLine(requestText);
 
                 connection.Close();
             }
@@ -51,6 +53,24 @@ Content-Length: {contentLength}
             var responseBytes = Encoding.UTF8.GetBytes(response);
 
             networkStream.Write(responseBytes);
+        }
+
+        private string ReadRequest(NetworkStream networkStream)
+        {
+            var bufferLength = 1024;
+            var buffer = new byte[bufferLength];
+
+            var requestBuilder = new StringBuilder();
+
+            do
+            {
+                var bytesRead = networkStream.Read(buffer, 0, bufferLength);
+
+                requestBuilder.Append(Encoding.UTF8.GetString(buffer, 0, bufferLength));
+            }
+            while (networkStream.DataAvailable);
+
+            return requestBuilder.ToString();
         }
     }
 }
