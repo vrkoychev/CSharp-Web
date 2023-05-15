@@ -1,9 +1,14 @@
-﻿namespace BasicWebServer.Server.HTTP
+﻿using BasicWebServer.Server.Common;
+
+namespace BasicWebServer.Server.HTTP
 {
     public class Header
     {
         public Header(string name, string value)
         {
+            Guard.AgainstNull(name);
+            Guard.AgainstNull(value);
+
             Name = name; 
             Value = value;
         }
